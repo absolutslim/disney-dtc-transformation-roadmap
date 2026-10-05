@@ -6,23 +6,23 @@
     <title>Disney DTC Transformation Roadmap</title>
     <style>
       :root {
-        --bg: #edf3ff;
-        --panel: rgba(255,255,255,0.92);
-        --ink: #182235;
-        --muted: #59677f;
-        --midnight: #0b1f3a;
-        --midnight-2: #112c4f;
-        --royal: #1f5eff;
-        --purple: #6c4dff;
+        --bg: #f3f5f8;
+        --panel: #ffffff;
+        --ink: #10151c;
+        --muted: #66707d;
+        --midnight: #071f3c;
+        --midnight-2: #0b3d70;
+        --royal: #0b67b2;
+        --purple: #163e73;
         --sky: #45b8ff;
-        --gold: #f5c451;
-        --green: #1f8a63;
-        --green-soft: #e9faf1;
-        --amber: #b56d1a;
-        --amber-soft: #fff4e1;
-        --line: rgba(15, 23, 42, 0.09);
-        --shadow-soft: 0 12px 25px rgba(11,31,58,0.08);
-        --shadow-strong: 0 22px 40px rgba(11,31,58,0.1);
+        --gold: #f3c65a;
+        --green: #17823b;
+        --green-soft: #eaf6ee;
+        --amber: #d98b00;
+        --amber-soft: #fff3d8;
+        --line: #dfe4ea;
+        --shadow-soft: 0 6px 20px rgba(11,31,58,0.08);
+        --shadow-strong: 0 8px 24px rgba(11,31,58,0.12);
       }
 
       * { box-sizing: border-box; }
@@ -30,27 +30,26 @@
       html, body {
         margin: 0;
         min-height: 100%;
-        background:
-          radial-gradient(circle at 12% 8%, rgba(69,184,255,0.17), transparent 18%),
-          radial-gradient(circle at 86% 18%, rgba(108,77,255,0.12), transparent 20%),
-          linear-gradient(180deg, #edf3ff 0%, #eef2fb 100%);
+        background: var(--bg);
         color: var(--ink);
-        font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
       }
 
       body {
-        padding: 4px;
+        padding: 18px;
       }
 
       .page {
         position: relative;
-        max-width: 1240px;
+        max-width: 1180px;
         margin: 0 auto;
-        background: rgba(255,255,255,0.38);
-        border: 1px solid rgba(11,31,58,0.08);
-        border-radius: 30px;
-        box-shadow: var(--shadow-strong);
+        background: var(--bg);
+        border: 0;
+        border-radius: 14px;
+        box-shadow: none;
         overflow: hidden;
+        display: grid;
+        gap: 12px;
       }
 
       .page::before,
@@ -81,31 +80,28 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        padding: 14px 22px 12px;
-        background: linear-gradient(135deg, var(--midnight) 0%, var(--midnight-2) 58%, #17325a 100%);
-        border-bottom: 1px solid rgba(255,255,255,0.1);
+        padding: 18px 20px;
+        background: linear-gradient(115deg, #061c35, #0b3d70 70%, #0b67b2);
+        color: #ffffff;
+        border-radius: 14px;
+        box-shadow: 0 6px 20px rgba(11,31,58,0.12);
       }
 
       .topbar::before,
       .topbar::after {
-        content: "✦";
+        content: "";
         position: absolute;
-        color: rgba(245,196,81,0.82);
-        font-size: 11px;
-        opacity: 0.9;
+        display: none;
       }
-
-      .topbar::before { left: 18%; top: 14px; }
-      .topbar::after { right: 22%; bottom: 12px; }
 
       .kicker {
         position: relative;
         z-index: 1;
-        letter-spacing: 0.22em;
+        letter-spacing: 0.15em;
         text-transform: uppercase;
         font-size: 10px;
         font-weight: 800;
-        color: rgba(255,255,255,0.9);
+        color: rgba(255,255,255,0.75);
       }
 
       .header-date {
@@ -114,30 +110,30 @@
         font-size: 11px;
         letter-spacing: 0.12em;
         text-transform: uppercase;
-        color: rgba(255,255,255,0.78);
+        color: rgba(255,255,255,0.8);
         font-weight: 700;
       }
 
       .content {
         position: relative;
-        padding: 6px 10px 6px;
-        background: linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.18));
+        padding: 0;
+        background: transparent;
       }
 
       .hero {
         display: grid;
         grid-template-columns: 1.8fr 1fr;
-        gap: 10px;
-        margin-bottom: 10px;
+        gap: 12px;
+        margin-bottom: 12px;
       }
 
       .hero-panel {
         position: relative;
-        background: linear-gradient(180deg, rgba(255,255,255,0.95), rgba(244,248,255,0.92));
+        background: linear-gradient(180deg, rgba(255,255,255,0.96), rgba(245,248,255,0.96));
         border: 1px solid var(--line);
-        border-radius: 20px;
+        border-radius: 12px;
         box-shadow: var(--shadow-soft);
-        padding: 10px 12px 8px;
+        padding: 16px 18px 14px;
         overflow: hidden;
       }
 
@@ -146,17 +142,14 @@
         position: absolute;
         inset: 0 auto auto 0;
         width: 100%;
-        height: 5px;
+        height: 4px;
         background: linear-gradient(90deg, var(--royal), var(--purple), var(--sky), var(--gold));
       }
 
       .hero-panel::after {
-        content: "✦";
+        content: "";
         position: absolute;
-        right: 26px;
-        top: 20px;
-        font-size: 22px;
-        color: rgba(31,94,255,0.2);
+        display: none;
       }
 
       .title {
@@ -181,8 +174,8 @@
         position: relative;
         background: linear-gradient(180deg, rgba(255,255,255,0.96), rgba(239,244,255,0.96));
         border: 1px solid rgba(11,31,58,0.08);
-        border-radius: 20px;
-        padding: 8px 10px 8px;
+        border-radius: 12px;
+        padding: 12px 14px;
         box-shadow: var(--shadow-soft);
         display: flex;
         flex-direction: column;
@@ -193,8 +186,8 @@
         content: "";
         position: absolute;
         inset: 0 0 auto 0;
-        height: 5px;
-        background: linear-gradient(90deg, var(--gold), #f9e8ad, var(--gold));
+        height: 4px;
+        background: linear-gradient(90deg, #f3c65a, #f9e8ad, #f3c65a);
       }
 
       .status-wrap {
@@ -247,17 +240,17 @@
       .metrics-grid {
         display: grid;
         grid-template-columns: repeat(4, minmax(0, 1fr));
-        gap: 6px;
-        margin-bottom: 8px;
+        gap: 10px;
+        margin-bottom: 12px;
       }
 
       .metric-card {
         position: relative;
         background: var(--panel);
         border: 1px solid var(--line);
-        border-radius: 14px;
-        padding: 5px 5px 4px;
-        min-height: 88px;
+        border-radius: 12px;
+        padding: 10px 10px 8px;
+        min-height: 154px;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
@@ -432,10 +425,10 @@
       .phase-card {
         position: relative;
         z-index: 1;
-        background: rgba(255,255,255,0.92);
-        border: 1px solid rgba(17,44,79,0.08);
-        border-radius: 14px;
-        padding: 5px 5px 4px;
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        padding: 10px 10px 8px;
         box-shadow: var(--shadow-soft);
       }
 
@@ -540,28 +533,28 @@
       .bottom-row {
         display: grid;
         grid-template-columns: 1.08fr 1.92fr;
-        gap: 6px;
+        gap: 10px;
       }
 
       .risk-panel,
       .decision-panel {
         position: relative;
-        background: rgba(255,255,255,0.92);
+        background: var(--panel);
         border: 1px solid var(--line);
-        border-radius: 14px;
-        padding: 6px 6px 5px;
+        border-radius: 12px;
+        padding: 12px;
         box-shadow: var(--shadow-soft);
       }
 
       .risk-panel {
-        background: linear-gradient(180deg, rgba(255,255,255,0.96), rgba(255,242,221,0.9));
+        background: linear-gradient(180deg, #fffaf3, #ffffff);
         border-top: 4px solid var(--amber);
       }
 
       .decision-panel {
         background: linear-gradient(180deg, rgba(11,31,58,0.99), rgba(18,38,65,0.99));
         border: 1px solid rgba(255,255,255,0.08);
-        border-top: 4px solid rgba(245,196,81,0.9);
+        border-top: 4px solid rgba(243,198,90,0.9);
       }
 
       .section-heading {
