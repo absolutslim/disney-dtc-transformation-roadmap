@@ -1,0 +1,993 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Disney DTC Transformation Roadmap</title>
+    <style>
+      :root {
+        --bg: #edf3ff;
+        --panel: rgba(255,255,255,0.92);
+        --ink: #182235;
+        --muted: #59677f;
+        --midnight: #0b1f3a;
+        --midnight-2: #112c4f;
+        --royal: #1f5eff;
+        --purple: #6c4dff;
+        --sky: #45b8ff;
+        --gold: #f5c451;
+        --green: #1f8a63;
+        --green-soft: #e9faf1;
+        --amber: #b56d1a;
+        --amber-soft: #fff4e1;
+        --line: rgba(15, 23, 42, 0.09);
+        --shadow-soft: 0 12px 25px rgba(11,31,58,0.08);
+        --shadow-strong: 0 22px 40px rgba(11,31,58,0.1);
+      }
+
+      * { box-sizing: border-box; }
+
+      html, body {
+        margin: 0;
+        min-height: 100%;
+        background:
+          radial-gradient(circle at 12% 8%, rgba(69,184,255,0.17), transparent 18%),
+          radial-gradient(circle at 86% 18%, rgba(108,77,255,0.12), transparent 20%),
+          linear-gradient(180deg, #edf3ff 0%, #eef2fb 100%);
+        color: var(--ink);
+        font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+      }
+
+      body {
+        padding: 4px;
+      }
+
+      .page {
+        position: relative;
+        max-width: 1240px;
+        margin: 0 auto;
+        background: rgba(255,255,255,0.38);
+        border: 1px solid rgba(11,31,58,0.08);
+        border-radius: 30px;
+        box-shadow: var(--shadow-strong);
+        overflow: hidden;
+      }
+
+      .page::before,
+      .page::after {
+        content: "";
+        position: absolute;
+        width: 180px;
+        height: 180px;
+        filter: blur(44px);
+        opacity: 0.22;
+        pointer-events: none;
+      }
+
+      .page::before {
+        top: -36px;
+        right: 4%;
+        background: rgba(108,77,255,0.25);
+      }
+
+      .page::after {
+        bottom: 6%;
+        left: -20px;
+        background: rgba(69,184,255,0.22);
+      }
+
+      .topbar {
+        position: relative;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 14px 22px 12px;
+        background: linear-gradient(135deg, var(--midnight) 0%, var(--midnight-2) 58%, #17325a 100%);
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+      }
+
+      .topbar::before,
+      .topbar::after {
+        content: "✦";
+        position: absolute;
+        color: rgba(245,196,81,0.82);
+        font-size: 11px;
+        opacity: 0.9;
+      }
+
+      .topbar::before { left: 18%; top: 14px; }
+      .topbar::after { right: 22%; bottom: 12px; }
+
+      .kicker {
+        position: relative;
+        z-index: 1;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        font-size: 10px;
+        font-weight: 800;
+        color: rgba(255,255,255,0.9);
+      }
+
+      .header-date {
+        position: relative;
+        z-index: 1;
+        font-size: 11px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: rgba(255,255,255,0.78);
+        font-weight: 700;
+      }
+
+      .content {
+        position: relative;
+        padding: 6px 10px 6px;
+        background: linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.18));
+      }
+
+      .hero {
+        display: grid;
+        grid-template-columns: 1.8fr 1fr;
+        gap: 10px;
+        margin-bottom: 10px;
+      }
+
+      .hero-panel {
+        position: relative;
+        background: linear-gradient(180deg, rgba(255,255,255,0.95), rgba(244,248,255,0.92));
+        border: 1px solid var(--line);
+        border-radius: 20px;
+        box-shadow: var(--shadow-soft);
+        padding: 10px 12px 8px;
+        overflow: hidden;
+      }
+
+      .hero-panel::before {
+        content: "";
+        position: absolute;
+        inset: 0 auto auto 0;
+        width: 100%;
+        height: 5px;
+        background: linear-gradient(90deg, var(--royal), var(--purple), var(--sky), var(--gold));
+      }
+
+      .hero-panel::after {
+        content: "✦";
+        position: absolute;
+        right: 26px;
+        top: 20px;
+        font-size: 22px;
+        color: rgba(31,94,255,0.2);
+      }
+
+      .title {
+        margin: 0;
+        font-size: clamp(28px, 2.3vw, 42px);
+        line-height: 0.94;
+        letter-spacing: -0.06em;
+        font-weight: 900;
+        color: var(--midnight);
+        max-width: 760px;
+      }
+
+      .subtitle {
+        margin-top: 8px;
+        max-width: 64ch;
+        color: var(--muted);
+        font-size: 12px;
+        line-height: 1.45;
+      }
+
+      .status-card {
+        position: relative;
+        background: linear-gradient(180deg, rgba(255,255,255,0.96), rgba(239,244,255,0.96));
+        border: 1px solid rgba(11,31,58,0.08);
+        border-radius: 20px;
+        padding: 8px 10px 8px;
+        box-shadow: var(--shadow-soft);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+      }
+
+      .status-card::before {
+        content: "";
+        position: absolute;
+        inset: 0 0 auto 0;
+        height: 5px;
+        background: linear-gradient(90deg, var(--gold), #f9e8ad, var(--gold));
+      }
+
+      .status-wrap {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 8px;
+      }
+
+      .label {
+        font-size: 11px;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        font-weight: 800;
+        color: var(--midnight);
+      }
+
+      .badge {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 10px 13px;
+        border-radius: 999px;
+        min-width: 148px;
+        font-size: 11px;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        font-weight: 900;
+        background: linear-gradient(180deg, #fff3d8, #f7e6ab);
+        color: var(--amber);
+        border: 1px solid rgba(181,109,26,0.22);
+      }
+
+      .status-value {
+        font-size: clamp(24px, 2vw, 34px);
+        line-height: 1;
+        letter-spacing: -0.06em;
+        font-weight: 900;
+        color: var(--midnight);
+      }
+
+      .status-note {
+        margin-top: 6px;
+        font-size: 10px;
+        line-height: 1.4;
+        color: var(--muted);
+      }
+
+      .metrics-grid {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 6px;
+        margin-bottom: 8px;
+      }
+
+      .metric-card {
+        position: relative;
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        padding: 5px 5px 4px;
+        min-height: 88px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        box-shadow: var(--shadow-soft);
+        overflow: hidden;
+        transition: transform 0.2s ease;
+      }
+
+      .metric-card:hover { transform: translateY(-2px); }
+
+      .metric-card::before {
+        content: "";
+        position: absolute;
+        inset: 0 0 auto 0;
+        height: 4px;
+        background: var(--card-accent, var(--royal));
+      }
+
+      .metric-card[data-metric="M1"] { --card-accent: var(--royal); }
+      .metric-card[data-metric="M2"] { --card-accent: var(--purple); }
+      .metric-card[data-metric="M3"] { --card-accent: var(--sky); }
+      .metric-card[data-metric="M4"] { --card-accent: var(--gold); }
+      .metric-card[data-metric="M5"] { --card-accent: var(--sky); }
+      .metric-card[data-metric="M6"] { --card-accent: var(--purple); }
+      .metric-card[data-metric="M7"] { --card-accent: var(--amber); background: linear-gradient(180deg, #fffaf1, rgba(255,255,255,0.9)); border-color: rgba(181,109,26,0.18); box-shadow: 0 14px 28px rgba(181,109,26,0.08); }
+      .metric-card[data-metric="M8"] { --card-accent: var(--royal); }
+
+      .metric-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 8px;
+      }
+
+      .metric-code {
+        font-size: 9px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        font-weight: 900;
+        color: var(--midnight);
+      }
+
+      .initiative-tag {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 4px 6px;
+        border-radius: 999px;
+        background: rgba(11,31,58,0.06);
+        border: 1px solid rgba(11,31,58,0.08);
+        color: var(--midnight);
+        font-size: 8px;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        font-weight: 800;
+      }
+
+      .metric-name {
+        margin-top: 6px;
+        font-size: 7.4px;
+        color: var(--muted);
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        font-weight: 800;
+        line-height: 1.18;
+      }
+
+      .metric-type {
+        display: inline-block;
+        margin-top: 7px;
+        font-size: 7px;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        font-weight: 800;
+        color: var(--midnight);
+        background: rgba(11,31,58,0.05);
+        padding: 4px 6px;
+        border-radius: 999px;
+        border: 1px solid rgba(11,31,58,0.08);
+      }
+
+      .metric-value {
+        margin-top: 4px;
+        font-size: clamp(15px, 1.2vw, 18px);
+        line-height: 1.02;
+        letter-spacing: -0.06em;
+        font-weight: 900;
+        color: var(--ink);
+      }
+
+      .metric-detail {
+        display: none;
+      }
+
+      .metric-meta {
+        display: grid;
+        gap: 5px;
+        margin-top: 6px;
+        padding-top: 6px;
+        border-top: 1px solid var(--line);
+      }
+
+      .detail-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 8px;
+      }
+
+      .detail-label {
+        font-size: 6px;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--muted);
+        font-weight: 800;
+      }
+
+      .detail-value {
+        font-size: 7.8px;
+        color: var(--ink);
+        text-align: right;
+        line-height: 1.2;
+        font-weight: 700;
+      }
+
+      .status-text {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 999px;
+        padding: 4px 7px;
+        font-size: 7px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        font-weight: 900;
+        white-space: nowrap;
+        width: fit-content;
+      }
+
+      .status-text::before {
+        content: "";
+        display: inline-block;
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        margin-right: 6px;
+        background: currentColor;
+      }
+
+      .green-text { background: var(--green-soft); color: var(--green); }
+      .amber-text { background: var(--amber-soft); color: var(--amber); }
+
+      .phases {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 8px;
+        margin-bottom: 10px;
+        position: relative;
+      }
+
+      .phases::before {
+        content: "";
+        position: absolute;
+        left: 12%;
+        right: 12%;
+        top: 20px;
+        height: 2px;
+        background: linear-gradient(90deg, rgba(69,184,255,0.55), rgba(108,77,255,0.55), rgba(31,94,255,0.6));
+        opacity: 0.5;
+      }
+
+      .phase-card {
+        position: relative;
+        z-index: 1;
+        background: rgba(255,255,255,0.92);
+        border: 1px solid rgba(17,44,79,0.08);
+        border-radius: 14px;
+        padding: 5px 5px 4px;
+        box-shadow: var(--shadow-soft);
+      }
+
+      .phase-card.crawl { border-top: 4px solid var(--sky); }
+      .phase-card.walk { border-top: 4px solid var(--purple); }
+      .phase-card.run { border-top: 4px solid var(--royal); }
+
+      .phase-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+        margin-bottom: 8px;
+      }
+
+      .phase-step {
+        width: 26px;
+        height: 26px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        font-size: 10px;
+        font-weight: 900;
+        letter-spacing: 0.08em;
+        background: rgba(11,31,58,0.06);
+        color: var(--midnight);
+      }
+
+      .phase-pill {
+        font-size: 8px;
+        font-weight: 800;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        border-radius: 999px;
+        padding: 6px 8px;
+      }
+
+      .crawl .phase-pill { background: rgba(69,184,255,0.16); color: #1a71a5; }
+      .walk .phase-pill { background: rgba(108,77,255,0.12); color: #4d3eca; }
+      .run .phase-pill { background: rgba(31,94,255,0.12); color: #2148b9; }
+
+      .phase-name {
+        margin: 0 0 6px;
+        font-size: 15px;
+        font-weight: 900;
+        letter-spacing: -0.05em;
+        color: var(--midnight);
+      }
+
+      .phase-highlight {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        gap: 6px;
+        padding-bottom: 6px;
+        border-bottom: 1px solid var(--line);
+        margin-bottom: 6px;
+      }
+
+      .phase-metric {
+        font-size: clamp(18px, 1.3vw, 22px);
+        font-weight: 900;
+        letter-spacing: -0.06em;
+      }
+
+      .phase-type {
+        font-size: 10px;
+        letter-spacing: 0.17em;
+        text-transform: uppercase;
+        color: var(--muted);
+        font-weight: 800;
+      }
+
+      .phase-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
+
+      .phase-list li {
+        position: relative;
+        margin-bottom: 2px;
+        padding-left: 8px;
+        color: var(--muted);
+        line-height: 1.08;
+        font-size: 7.5px;
+      }
+
+      .phase-list li::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 9px;
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--royal);
+        opacity: 0.8;
+      }
+
+      .bottom-row {
+        display: grid;
+        grid-template-columns: 1.08fr 1.92fr;
+        gap: 6px;
+      }
+
+      .risk-panel,
+      .decision-panel {
+        position: relative;
+        background: rgba(255,255,255,0.92);
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        padding: 6px 6px 5px;
+        box-shadow: var(--shadow-soft);
+      }
+
+      .risk-panel {
+        background: linear-gradient(180deg, rgba(255,255,255,0.96), rgba(255,242,221,0.9));
+        border-top: 4px solid var(--amber);
+      }
+
+      .decision-panel {
+        background: linear-gradient(180deg, rgba(11,31,58,0.99), rgba(18,38,65,0.99));
+        border: 1px solid rgba(255,255,255,0.08);
+        border-top: 4px solid rgba(245,196,81,0.9);
+      }
+
+      .section-heading {
+        margin: 0 0 12px;
+        font-size: 11px;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        font-weight: 900;
+        color: var(--muted);
+      }
+
+      .decision-panel .section-heading {
+        color: rgba(255,255,255,0.82);
+      }
+
+      .risk-title {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 8px;
+      }
+
+      .big-risk {
+        margin: 0;
+        font-size: 16px;
+        line-height: 1.2;
+        letter-spacing: -0.04em;
+        font-weight: 900;
+        color: var(--ink);
+      }
+
+      .risk-status {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 7px 10px;
+        border-radius: 999px;
+        background: var(--amber-soft);
+        color: var(--amber);
+        border: 1px solid rgba(181,109,26,0.2);
+        font-size: 9px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        font-weight: 900;
+      }
+
+      .risk-status::before {
+        content: "";
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: currentColor;
+      }
+
+      .risk-text {
+        margin: 0;
+        color: var(--muted);
+        line-height: 1.4;
+        font-size: 11px;
+      }
+
+      .decision-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: grid;
+        gap: 8px;
+      }
+
+      .decision-item {
+        display: grid;
+        grid-template-columns: 30px 1fr;
+        gap: 8px;
+        padding: 7px 7px 5px;
+        border-radius: 9px;
+        border: 1px solid rgba(255,255,255,0.08);
+        background: rgba(255,255,255,0.04);
+      }
+
+      .decision-number {
+        width: 34px;
+        height: 34px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, var(--gold), #f3d77f);
+        color: var(--midnight);
+        font-weight: 900;
+        font-size: 14px;
+      }
+
+      .decision-copy strong {
+        display: block;
+        margin-bottom: 2px;
+        color: #f5f7ff;
+        font-size: 11px;
+        letter-spacing: -0.02em;
+        font-weight: 800;
+      }
+
+      .decision-copy span {
+        display: block;
+        color: rgba(255,255,255,0.75);
+        font-size: 9px;
+        line-height: 1.3;
+      }
+
+      .footnotes {
+        margin-top: 8px;
+        padding-top: 6px;
+        border-top: 1px solid var(--line);
+        display: flex;
+        justify-content: space-between;
+        gap: 10px;
+        font-size: 9px;
+        color: var(--muted);
+        line-height: 1.35;
+      }
+
+      .footnotes span {
+        display: block;
+      }
+
+      @media (max-width: 980px) {
+        .hero, .bottom-row, .phases { grid-template-columns: 1fr; }
+        .metrics-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      }
+
+      @media (max-width: 640px) {
+        body { padding: 14px; }
+        .metrics-grid { grid-template-columns: 1fr; }
+        .topbar { padding: 14px 18px; }
+        .content { padding: 16px 18px 12px; }
+      }
+
+      @media print {
+        body {
+          background: white;
+          padding: 0;
+          -webkit-print-color-adjust: exact;
+          print-color-adjust: exact;
+        }
+
+        .page {
+          box-shadow: none;
+          border: none;
+          max-width: none;
+          border-radius: 0;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page">
+      <header class="topbar">
+        <div class="kicker">Disney DTC | QBR Snapshot</div>
+        <div class="header-date">Week 6 | Executive Dashboard</div>
+      </header>
+
+      <main class="content">
+        <section class="hero">
+          <div class="hero-panel">
+            <h1 class="title">Disney DTC Transformation Roadmap</h1>
+            <div class="subtitle">
+              Foundation and demand gates were achieved, but peak-load platform capacity remains the principal scaling risk as Disney moves from bounded launches to global DTC operations.
+            </div>
+          </div>
+
+          <aside class="status-card">
+            <div class="status-wrap">
+              <span class="label">Overall health</span>
+              <span class="badge">AMBER / AT RISK</span>
+            </div>
+            <div class="status-value">68 / 100</div>
+            <div class="status-note">
+              “Foundation and demand gates were achieved, but peak-load platform capacity remains the principal scaling risk as Disney moves from bounded launches to global DTC operations.”
+            </div>
+          </aside>
+        </section>
+
+        <section class="metrics-grid" aria-label="KPI Summary">
+          <article class="metric-card" data-metric="M1">
+            <div class="metric-top">
+              <div class="metric-code">M1</div>
+              <span class="initiative-tag">I2</span>
+            </div>
+            <div class="metric-name">DTC Accountable Owner Established</div>
+            <div class="metric-type">Leading · Organizational change</div>
+            <div class="metric-value">Established</div>
+            <div class="metric-detail">Chairman of DTCI established and DTC businesses placed under a designated DTC organizational owner.</div>
+            <div class="metric-meta">
+              <div class="detail-row">
+                <span class="detail-label">Target</span>
+                <span class="detail-value">Accountable DTC owner established before flagship scale deployment†</span>
+              </div>
+              <span class="status-text green-text">GREEN / ON TRACK</span>
+            </div>
+          </article>
+
+          <article class="metric-card" data-metric="M2">
+            <div class="metric-top">
+              <div class="metric-code">M2</div>
+              <span class="initiative-tag">I2</span>
+            </div>
+            <div class="metric-name">DTC Operating Structure Established</div>
+            <div class="metric-type">Leading · Organizational change</div>
+            <div class="metric-value">Established</div>
+            <div class="metric-detail">DTCI segment structure created to house Disney's DTC businesses.</div>
+            <div class="metric-meta">
+              <div class="detail-row">
+                <span class="detail-label">Target</span>
+                <span class="detail-value">DTC portfolio managed within a defined enterprise organizational structure†</span>
+              </div>
+              <span class="status-text green-text">GREEN / ON TRACK</span>
+            </div>
+          </article>
+
+          <article class="metric-card" data-metric="M3">
+            <div class="metric-top">
+              <div class="metric-code">M3</div>
+              <span class="initiative-tag">I3</span>
+            </div>
+            <div class="metric-name">ESPN+ Paid Subscriber Readiness</div>
+            <div class="metric-type">Lagging</div>
+            <div class="metric-value">1.4M</div>
+            <div class="metric-detail">Dec. 29, 2018</div>
+            <div class="metric-meta">
+              <div class="detail-row">
+                <span class="detail-label">Target</span>
+                <span class="detail-value">≥1.0M†</span>
+              </div>
+              <span class="status-text green-text">GREEN / ON TRACK</span>
+            </div>
+          </article>
+
+          <article class="metric-card" data-metric="M4">
+            <div class="metric-top">
+              <div class="metric-code">M4</div>
+              <span class="initiative-tag">I4</span>
+            </div>
+            <div class="metric-name">Hulu Portfolio Scale</div>
+            <div class="metric-type">Lagging</div>
+            <div class="metric-value">30.4M</div>
+            <div class="metric-detail">Dec. 28, 2019</div>
+            <div class="metric-meta">
+              <div class="detail-row">
+                <span class="detail-label">Target</span>
+                <span class="detail-value">≥30M†</span>
+              </div>
+              <span class="status-text green-text">GREEN / ON TRACK</span>
+            </div>
+          </article>
+
+          <article class="metric-card" data-metric="M5">
+            <div class="metric-top">
+              <div class="metric-code">M5</div>
+              <span class="initiative-tag">I5</span>
+            </div>
+            <div class="metric-name">Disney+ Initial Demand</div>
+            <div class="metric-type">Lagging</div>
+            <div class="metric-value">26.5M</div>
+            <div class="metric-detail">Dec. 28, 2019 · approximately 44% of the 60M low-end FY2024 target.</div>
+            <div class="metric-meta">
+              <div class="detail-row">
+                <span class="detail-label">Target</span>
+                <span class="detail-value">≥20M† by first quarter-end after launch</span>
+              </div>
+              <span class="status-text green-text">GREEN / ON TRACK</span>
+            </div>
+          </article>
+
+          <article class="metric-card" data-metric="M6">
+            <div class="metric-top">
+              <div class="metric-code">M6</div>
+              <span class="initiative-tag">I5 · I6</span>
+            </div>
+            <div class="metric-name">Disney+ Global Scale</div>
+            <div class="metric-type">Lagging</div>
+            <div class="metric-value">73.7M</div>
+            <div class="metric-detail">Oct. 3, 2020</div>
+            <div class="metric-meta">
+              <div class="detail-row">
+                <span class="detail-label">Target</span>
+                <span class="detail-value">60M low end of Disney's FY2024 Investor Day target</span>
+              </div>
+              <span class="status-text green-text">GREEN / ON TRACK</span>
+            </div>
+          </article>
+
+          <article class="metric-card" data-metric="M7">
+            <div class="metric-top">
+              <div class="metric-code">M7</div>
+              <span class="initiative-tag">I1 · I6</span>
+            </div>
+            <div class="metric-name">Platform Capacity Readiness</div>
+            <div class="metric-type">Leading</div>
+            <div class="metric-value">Peak-load exposure</div>
+            <div class="metric-detail">Owned platform supported large-scale paid demand, but Disney+ experienced launch-day login / peak-load capacity issues.</div>
+            <div class="metric-meta">
+              <div class="detail-row">
+                <span class="detail-label">Target</span>
+                <span class="detail-value">Stable capacity through further market launches†</span>
+              </div>
+              <span class="status-text amber-text">AMBER / AT RISK</span>
+            </div>
+          </article>
+
+          <article class="metric-card" data-metric="M8">
+            <div class="metric-top">
+              <div class="metric-code">M8</div>
+              <span class="initiative-tag">I7</span>
+            </div>
+            <div class="metric-name">Enterprise DTC Operating Model Activation</div>
+            <div class="metric-type">Leading · Organizational change</div>
+            <div class="metric-value">Activated</div>
+            <div class="metric-detail">Enterprise reorganization established three content groups plus one distribution organization with global distribution and monetization responsibility.</div>
+            <div class="metric-meta">
+              <div class="detail-row">
+                <span class="detail-label">Target</span>
+                <span class="detail-value">Enterprise distribution and monetization decision rights consolidated†</span>
+              </div>
+              <span class="status-text green-text">GREEN / ON TRACK</span>
+            </div>
+          </article>
+        </section>
+
+        <section class="phases" aria-label="Phase Structure">
+          <article class="phase-card crawl">
+            <div class="phase-head">
+              <div class="phase-step">01</div>
+              <span class="phase-pill">Crawl</span>
+            </div>
+            <h2 class="phase-name">Crawl</h2>
+            <div class="phase-highlight">
+              <div class="phase-metric">M1·M2</div>
+              <div class="phase-type">Leading</div>
+            </div>
+            <ul class="phase-list">
+              <li>Foundation-level governance and enterprise accountability were established.</li>
+              <li>Organizational design supported stronger coordination before broader scale.</li>
+              <li>I2 created the governance base for later operating expansion.</li>
+            </ul>
+          </article>
+
+          <article class="phase-card walk">
+            <div class="phase-head">
+              <div class="phase-step">02</div>
+              <span class="phase-pill">Walk</span>
+            </div>
+            <h2 class="phase-name">Walk</h2>
+            <div class="phase-highlight">
+              <div class="phase-metric">M3·M4·M5</div>
+              <div class="phase-type">Demand</div>
+            </div>
+            <ul class="phase-list">
+              <li>Portfolio traction was visible across ESPN+, Hulu, and Disney+ initial launch.</li>
+              <li>I5 demand supported the rollout trajectory and de-risked execution of the broader launch model.</li>
+              <li>The 44% figure reflects team analysis rather than a Disney-reported KPI.</li>
+            </ul>
+          </article>
+
+          <article class="phase-card run">
+            <div class="phase-head">
+              <div class="phase-step">03</div>
+              <span class="phase-pill">Run</span>
+            </div>
+            <h2 class="phase-name">Run</h2>
+            <div class="phase-highlight">
+              <div class="phase-metric">M6·M7·M8</div>
+              <div class="phase-type">Scale</div>
+            </div>
+            <ul class="phase-list">
+              <li>Scale metrics show strong traction but meaningful peak-load risk in operations.</li>
+              <li>Platform readiness remained the key control point for the next expansion cycle.</li>
+              <li>Enterprise structure and distribution rights were reinforced to support larger-scale execution.</li>
+            </ul>
+          </article>
+        </section>
+
+        <section class="bottom-row">
+          <aside class="risk-panel" aria-label="Biggest risk">
+            <h2 class="section-heading">Biggest risk</h2>
+            <div class="risk-title">
+              <p class="big-risk">Platform capacity readiness</p>
+              <span class="risk-status">AMBER</span>
+            </div>
+            <p class="risk-text">
+              Peak-load platform capacity remains the principal scaling risk as Disney moves from bounded launches to global DTC operations. The launch-day login and peak-load issues are the clearest indicator that demand validation outpaced operational readiness at the system level.
+            </p>
+          </aside>
+
+          <section class="decision-panel" aria-label="Leadership decisions">
+            <h2 class="section-heading">Decisions required this quarter</h2>
+            <ul class="decision-list">
+              <li class="decision-item">
+                <div class="decision-number">D6</div>
+                <div class="decision-copy">
+                  <strong>Governance decision title pending RACI</strong>
+                  <span>Exact title and Accountable role to be synchronized with raci.html before final merge.</span>
+                </div>
+              </li>
+              <li class="decision-item">
+                <div class="decision-number">D7</div>
+                <div class="decision-copy">
+                  <strong>Governance decision title pending RACI</strong>
+                  <span>Exact title and Accountable role to be synchronized with raci.html before final merge.</span>
+                </div>
+              </li>
+              <li class="decision-item">
+                <div class="decision-number">D1</div>
+                <div class="decision-copy">
+                  <strong>Governance decision title pending RACI</strong>
+                  <span>Exact title and Accountable role to be synchronized with raci.html before final merge.</span>
+                </div>
+              </li>
+            </ul>
+          </section>
+        </section>
+
+        <footer class="footnotes">
+          <span>† Team-defined management threshold; not a Disney-reported target.</span>
+          <span>Disney-reported facts and outcomes are shown as evidence; Crawl/Walk/Run sequencing, thresholds, and health classifications are the team's analysis.</span>
+        </footer>
+      </main>
+    </div>
+  </body>
+</html>
