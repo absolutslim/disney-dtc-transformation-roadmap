@@ -1,0 +1,415 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Disney DTC Executive QBR</title>
+<style>
+:root{
+ --bg:#030f33;--panel:#071c4f;--panel2:#0a2563;--line:#ffffff1f;--ink:#f5f8ff;--muted:#b4c4e2;--dim:#8aa0c8;
+ --blue:#1f7bff;--cyan:#5fe3ff;--gold:#ffd23f;--red:#ef2b3a;--green:#22b26b;--grey:#8a99ad;
+}
+*{box-sizing:border-box}
+html{background:var(--bg)}
+body{margin:0;font-family:Inter,"Segoe UI",Arial,sans-serif;color:var(--ink);font-size:12px;
+ background:radial-gradient(circle at 10% 0%,#0b48c944 0,transparent 30%),linear-gradient(180deg,#041447,#020a24);min-height:100vh}
+.wrap{max-width:1400px;margin:0 auto;padding:14px 18px 10px}
+
+/* header */
+.head{display:grid;grid-template-columns:1fr 430px;gap:14px;align-items:stretch;
+ background:linear-gradient(118deg,#06297a,#0756e0 60%,#0a3cae);border:1px solid #6bb9ff44;border-radius:16px;padding:14px 18px}
+.kicker{font-size:10px;font-weight:900;letter-spacing:1.4px;color:#dbe8ff}
+.kicker b{color:var(--gold)}
+h1{margin:6px 0 4px;font-size:28px;line-height:1.05;letter-spacing:-.8px}
+h1 span{color:var(--cyan)}
+.qline{font-size:11px;color:#e2ecff}
+.qline b{color:#fff}
+.health{background:#001a5ccc;border:1px solid #ffffff33;border-radius:12px;padding:10px 14px;display:flex;flex-direction:column;justify-content:center}
+.hlabel{font-size:9.5px;font-weight:900;letter-spacing:1px;color:#cfe0ff}
+.hval{display:flex;align-items:center;gap:10px;margin:4px 0}
+.dot{width:18px;height:18px;border-radius:50%;background:var(--gold);box-shadow:0 0 14px var(--gold)}
+.hval b{font-size:24px;color:var(--gold);letter-spacing:.5px}
+.hval span{font-size:12px;font-weight:800}
+.htext{font-size:11px;line-height:1.4;color:#eef4ff}
+
+/* phases */
+.phases{display:grid;grid-template-columns:2fr 3fr 3fr;gap:12px;margin-top:12px}
+.phase{background:var(--panel);border:1px solid var(--line);border-radius:14px;overflow:hidden;display:flex;flex-direction:column}
+.ph-h{padding:9px 12px 8px;border-bottom:1px solid var(--line)}
+.ph-top{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.ph-name{font-size:12px;font-weight:950;letter-spacing:1px}
+.crawl .ph-h{background:linear-gradient(90deg,#4f5d72,#6e7f98)}
+.walk .ph-h{background:linear-gradient(90deg,#0759dd,#1388ff)}
+.run .ph-h{background:linear-gradient(90deg,#a90c1c,#e52533)}
+.ph-init{font-size:10px;color:#eef3ff;margin-top:3px;line-height:1.35}
+.ph-status{font-size:10.5px;margin-top:5px;color:#fff;line-height:1.35}
+.chip{display:inline-block;font-size:8.5px;font-weight:950;letter-spacing:.5px;padding:3px 7px;border-radius:9px;white-space:nowrap}
+.c-green{background:#0c5a3d;color:#7ff5b6}.c-amber{background:var(--gold);color:#241800}.c-red{background:#c10f22;color:#fff}.c-blue{background:#075ce8;color:#fff}
+.mgrid{display:grid;gap:8px;padding:10px;flex:1}
+.crawl .mgrid{grid-template-columns:1fr}
+.walk .mgrid,.run .mgrid{grid-template-columns:repeat(3,1fr)}
+.metric{background:var(--panel2);border:1px solid #7fb2ff2e;border-radius:11px;padding:9px 10px;display:flex;flex-direction:column}
+.metric.hot{border:2px solid var(--red);background:linear-gradient(150deg,#4e1023,#170e2c)}
+.mh{display:flex;justify-content:space-between;align-items:flex-start;gap:6px}
+.mid{font-size:8.5px;font-weight:900;color:var(--muted);letter-spacing:.3px}
+.mval{font-size:22px;font-weight:950;margin:5px 0 1px;letter-spacing:-.3px}
+.mname{font-size:11px;font-weight:800;line-height:1.2}
+.mt{font-size:9.5px;color:var(--muted);margin-top:4px;line-height:1.3}
+.mt b{color:#fff}
+.mnote{font-size:9px;color:var(--dim);margin-top:auto;padding-top:5px;line-height:1.3}
+.crawl .metric{flex-direction:column}
+
+/* bottom row */
+.bottom{display:grid;grid-template-columns:1.55fr 1fr .9fr;gap:12px;margin-top:12px}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:11px 13px}
+.pt{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:7px}
+.pt b{font-size:11.5px;letter-spacing:.6px}
+.pt span{font-size:9.5px;color:var(--cyan)}
+.dec{display:grid;grid-template-columns:34px 1fr 150px;gap:9px;align-items:center;padding:7px 0;border-top:1px solid var(--line)}
+.dec:first-of-type{border-top:0}
+.did{font-weight:950;text-align:center;border-radius:6px;padding:6px 0;font-size:11px}
+.d6{background:var(--red)}.d1{background:#0c7a45}.d7{background:#075be9}
+.dq{font-size:11px;line-height:1.35}.dq b{display:block;font-size:11px}
+.dq span{color:var(--muted);font-size:10px}
+.own{font-size:9.5px;background:#0d2b62;border:1px solid #ffffff22;border-radius:9px;padding:5px 7px;line-height:1.3}
+.own b{color:#fff}
+.charts{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.ct{font-size:10px;font-weight:850;margin-bottom:4px}
+.bars{height:96px;display:flex;align-items:flex-end;gap:10px;border-bottom:1px solid #ffffff40;padding:0 6px}
+.bw{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%}
+.bar{width:100%;max-width:38px;border-radius:4px 4px 0 0;background:linear-gradient(#39a0ff,#0752db)}
+.bar.r{background:linear-gradient(#ff5d65,#c40c1e)}
+.bar.f{background:repeating-linear-gradient(135deg,#39a0ff,#39a0ff 4px,#2a6fd0 4px,#2a6fd0 8px);opacity:.75}
+.bv{font-size:10px;font-weight:900;margin-bottom:3px;white-space:nowrap}
+.bl{display:flex;gap:10px;padding:3px 6px 0}.bl span{flex:1;text-align:center;font-size:9px;color:var(--muted)}
+.cnote{font-size:8.8px;color:var(--dim);margin-top:5px;line-height:1.3}
+.legend{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px}
+.notes p{font-size:9.8px;line-height:1.38;color:var(--muted);margin:0 0 6px}
+.notes p b{color:#fff}
+.foot{display:flex;justify-content:space-between;font-size:9.5px;color:var(--dim);margin-top:9px;gap:10px}
+.foot button{background:none;border:1px solid #ffffff33;color:#dbe8ff;border-radius:8px;font-size:9.5px;padding:3px 8px;cursor:pointer}
+
+.modal{display:none;position:fixed;inset:0;background:#001033d9;z-index:100;align-items:center;justify-content:center;padding:16px}
+.modal.open{display:flex}
+.mbox{width:min(720px,100%);max-height:90vh;overflow:auto;background:linear-gradient(145deg,#0a2763,#041438);border:1px solid #7eb7ff55;border-radius:16px;padding:20px 22px}
+.mbox h2{margin:4px 0 10px;font-size:18px}.mbox li{font-size:12px;line-height:1.5;color:#c6d6ef;margin-bottom:6px}
+.x{float:right;border:0;background:none;color:#fff;font-size:22px;cursor:pointer}
+
+@media(max-width:1100px){
+ .head{grid-template-columns:1fr}.phases{grid-template-columns:1fr}.bottom{grid-template-columns:1fr}
+ .walk .mgrid,.run .mgrid{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:560px){.walk .mgrid,.run .mgrid{grid-template-columns:1fr}.dec{grid-template-columns:34px 1fr}.own{grid-column:2}h1{font-size:23px}}
+@media print{
+ @page{size:11in 8.5in;margin:.2in}
+ html,body{background:#030f33;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+ .wrap{zoom:.735;max-width:1400px;width:1400px}
+ .head{grid-template-columns:1fr 430px}.phases{grid-template-columns:2fr 3fr 3fr}.bottom{grid-template-columns:1.55fr 1fr .9fr}
+ .walk .mgrid,.run .mgrid{grid-template-columns:repeat(3,1fr)}
+ .foot button,.modal{display:none!important}
+}
+
+/* =========================================================
+   DISNEY CORPORATE BOARDROOM — VISUAL-ONLY OVERRIDE
+   No copy, data, targets, metric IDs, ordering, or HTML body changed.
+   ========================================================= */
+:root{
+ --bg:#02091a; --panel:#07172f; --panel2:#0a2144; --line:#9fc7ff24;
+ --ink:#f7f9fd; --muted:#b8c5d9; --dim:#8798b2;
+ --blue:#1677e8; --cyan:#79d7ff; --gold:#e8c56a;
+ --red:#dc3545; --green:#2ca66f; --grey:#8290a3;
+}
+html{background:#02091a}
+body{
+ background:
+  radial-gradient(ellipse at 78% -12%,rgba(30,105,210,.24),transparent 34%),
+  radial-gradient(ellipse at 15% 0%,rgba(16,67,145,.18),transparent 29%),
+  linear-gradient(180deg,#061329 0%,#020916 58%,#010611 100%);
+ letter-spacing:.01em;
+}
+.wrap{max-width:1440px;padding:18px 22px 13px}
+
+/* restrained Disney corporate masthead */
+.head{
+ position:relative;isolation:isolate;overflow:hidden;
+ grid-template-columns:1fr 420px;
+ padding:17px 20px;
+ background:
+  linear-gradient(112deg,rgba(6,31,75,.98),rgba(8,65,145,.96) 58%,rgba(5,39,94,.98));
+ border:1px solid #86b9ee40;
+ border-radius:12px;
+ box-shadow:0 16px 40px rgba(0,0,0,.25),inset 0 1px 0 rgba(255,255,255,.08);
+}
+.head:before{
+ content:"";
+ position:absolute;inset:0;z-index:-2;pointer-events:none;
+ background:
+  radial-gradient(circle at 70% 18%,rgba(255,255,255,.52) 0 1px,transparent 1.4px),
+  radial-gradient(circle at 77% 32%,rgba(159,220,255,.45) 0 1px,transparent 1.4px),
+  radial-gradient(circle at 86% 17%,rgba(232,197,106,.55) 0 1px,transparent 1.5px),
+  radial-gradient(circle at 92% 42%,rgba(255,255,255,.36) 0 1px,transparent 1.4px);
+}
+.head:after{
+ content:"";
+ position:absolute;right:22px;bottom:-2px;z-index:-1;
+ width:248px;height:80px;opacity:.22;
+ background-repeat:no-repeat;background-position:right bottom;background-size:contain;
+ background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 420 145'%3E%3Cg fill='%23000d2a'%3E%3Cpath d='M90 145V95h25V76h11V95h21V61h13V44h9V61h15V94h18V70h12V55h9V70h19V43h13V28h8V43h13v52h21V72h14v-20h8v20h22v73z'/%3E%3Cpath d='M144 44l20-29 20 29zM234 28l25-28 25 28zM302 52l12-19 12 19zM110 76l10-16 10 16z'/%3E%3Cpath d='M55 145v-22h310v22z'/%3E%3C/g%3E%3C/svg%3E");
+}
+.kicker{color:#d7e5f7;letter-spacing:1.7px}
+.kicker b{color:#f0d584}
+h1{font-size:29px;letter-spacing:-.65px;font-weight:750}
+h1 span{color:#9bdfff}
+.qline{color:#c9d8eb}
+.health{
+ background:linear-gradient(145deg,rgba(3,22,55,.92),rgba(5,40,91,.88));
+ border:1px solid rgba(255,255,255,.16);
+ border-radius:9px;
+ box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
+}
+.dot{width:14px;height:14px;box-shadow:0 0 12px rgba(232,197,106,.5)}
+.hval b{color:#f0cf72;font-size:23px}
+
+/* board-level phase architecture */
+.phases{gap:11px;margin-top:11px}
+.phase{
+ border-radius:10px;
+ background:linear-gradient(160deg,rgba(8,28,59,.98),rgba(5,18,39,.98));
+ border:1px solid rgba(148,188,238,.14);
+ box-shadow:0 8px 24px rgba(0,0,0,.17);
+}
+.ph-h{padding:9px 12px;border-bottom:1px solid rgba(255,255,255,.09)}
+.crawl .ph-h{background:linear-gradient(90deg,#3f4e64,#5c6e86)}
+.walk .ph-h{background:linear-gradient(90deg,#0750b8,#1178dc)}
+.run .ph-h{background:linear-gradient(90deg,#8f1824,#c72a36)}
+.ph-name{letter-spacing:1.15px}
+.metric{
+ border-radius:8px;
+ background:linear-gradient(150deg,#0a244b,#071a37);
+ border:1px solid rgba(126,177,235,.16);
+ padding:9px 10px;
+}
+.metric.hot{
+ border:1.5px solid #e24955;
+ background:linear-gradient(150deg,#351425,#161326);
+ box-shadow:inset 3px 0 0 #e24955,0 0 0 1px rgba(226,73,85,.06);
+}
+.mval{font-size:21px}
+.chip{border-radius:5px;padding:3px 7px}
+.c-amber{background:#e6c25f;color:#211a08}
+.c-green{background:#135f45;color:#9df0c4}
+.c-red{background:#b92534}
+.c-blue{background:#0b62c9}
+
+/* bottom: cleaner strategy-consulting treatment */
+.bottom{gap:11px;margin-top:11px}
+.panel{
+ border-radius:10px;
+ background:linear-gradient(160deg,rgba(8,28,59,.98),rgba(5,18,39,.98));
+ border:1px solid rgba(148,188,238,.14);
+ box-shadow:0 8px 24px rgba(0,0,0,.16);
+}
+.pt{border-bottom:1px solid rgba(255,255,255,.08);padding-bottom:6px;margin-bottom:3px}
+.pt b{font-weight:900;letter-spacing:.8px}
+.pt span{color:#8fdcff}
+.dec{border-top:1px solid rgba(255,255,255,.075)}
+.did{border-radius:4px}
+.own{border-radius:6px;background:#0a2752}
+.bar{background:linear-gradient(#49a7ed,#1263c2)}
+.bar.r{background:linear-gradient(#ef6670,#b92534)}
+.bar.f{background:repeating-linear-gradient(135deg,#49a7ed,#49a7ed 4px,#286cb1 4px,#286cb1 8px)}
+.foot{
+ margin-top:10px;padding-top:8px;
+ border-top:1px solid rgba(255,255,255,.10);
+ color:#8e9db3;
+}
+.foot button{
+ border-color:rgba(232,197,106,.35);
+ color:#e7d8a9;
+ border-radius:5px;
+}
+.mbox{
+ background:linear-gradient(145deg,#092654,#04152f);
+ border-color:#8bbbec44;border-radius:11px;
+}
+
+/* Fine golden corporate accent, intentionally minimal */
+.head{border-top-color:rgba(232,197,106,.38)}
+.panel:hover,.phase:hover{border-color:rgba(148,188,238,.22)}
+
+@media print{
+ html,body{background:#02091a}
+ .wrap{zoom:.735;max-width:1400px;width:1400px}
+ .head,.phase,.panel,.metric,.health{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="head">
+ <div>
+  <div class="kicker">THE WALT DISNEY COMPANY · DIRECT-TO-CONSUMER TRANSFORMATION · <b>EXECUTIVE QBR · Q3 FY2020</b></div>
+  <h1>Adoption is ahead. <span>The operating model must catch up.</span></h1>
+  <div class="qline"><b>Current quarter:</b> Q3 FY2020 (ended Jun 27, 2020) &nbsp;·&nbsp; <b>Roadmap:</b> I1–I7, Aug 2017 – Nov 2020 &nbsp;·&nbsp; <b>Next QBR:</b> Q4 FY2020</div>
+ </div>
+ <div class="health">
+  <div class="hlabel">OVERALL TRANSFORMATION HEALTH</div>
+  <div class="hval"><i class="dot"></i><b>AMBER</b><span>Binding constraint: decision rights</span></div>
+  <div class="htext">Subscriber adoption is at 96% of the FY2024 low-end target four years early, but content allocation still has two owners and DTCI losses are widening.</div>
+ </div>
+</header>
+
+<section class="phases">
+ <div class="phase crawl">
+  <div class="ph-h">
+   <div class="ph-top"><span class="ph-name">CRAWL · FOUNDATION</span><span class="chip c-amber">AT RISK</span></div>
+   <div class="ph-init">I1 BAMTech Majority Control · I2 DTCI Segment Creation</div>
+   <div class="ph-status">Built in 2018 (G1 passed). The decision-rights capability from I2 is now the gap.</div>
+  </div>
+  <div class="mgrid">
+   <div class="metric hot">
+    <div class="mh"><span class="mid">M2 · I2→I7 · LEADING</span><span class="chip c-red">OFF TRACK</span></div>
+    <div class="mval">2 owners</div>
+    <div class="mname">DTC-first content allocation owner</div>
+    <div class="mt">Target: <b>1 owner by Q1 FY2021</b>†</div>
+    <div class="mnote">Studio P&amp;L and DTCI both claim release decisions. RACI D6 assigns one Accountable (Chairman, DMED) once I7 takes effect.</div>
+   </div>
+   <div class="metric">
+    <div class="mh"><span class="mid">M1 · I2 · LEADING · ORG HEALTH</span><span class="chip c-amber">AT RISK</span></div>
+    <div class="mval">0 days</div>
+    <div class="mname">DTC leadership seat vacancy</div>
+    <div class="mt">Target: <b>0 days</b> vacant</div>
+    <div class="mnote">Seat filled the same day, but the Chairman of DTCI changed in May 2020 and the CEO in Feb 2020.</div>
+   </div>
+  </div>
+ </div>
+
+ <div class="phase walk">
+  <div class="ph-h">
+   <div class="ph-top"><span class="ph-name">WALK · BOUNDED DEPLOYMENT</span><span class="chip c-green">COMPLETE</span></div>
+   <div class="ph-init">I3 ESPN+ Launch · I4 Hulu Operational Control · I5 Disney+ Initial Launch</div>
+   <div class="ph-status">G2 passed in Q1 FY2020, with one amber: platform capacity at peak load on launch day.</div>
+  </div>
+  <div class="mgrid">
+   <div class="metric">
+    <div class="mh"><span class="mid">M3 · I3 · LAGGING</span><span class="chip c-green">ON TRACK</span></div>
+    <div class="mval">8.5M</div>
+    <div class="mname">ESPN+ paid subscribers</div>
+    <div class="mt">FY2024 target: <b>8–12M</b></div>
+    <div class="mnote">Already inside the target range.</div>
+   </div>
+   <div class="metric">
+    <div class="mh"><span class="mid">M4 · I4 · LAGGING</span><span class="chip c-green">ON TRACK</span></div>
+    <div class="mval">35.5M</div>
+    <div class="mname">Hulu paid subscribers</div>
+    <div class="mt">FY2024 target: <b>40–60M</b></div>
+    <div class="mnote">Growth shown alongside control, not attributed to it.</div>
+   </div>
+   <div class="metric">
+    <div class="mh"><span class="mid">M6 · I5 · LAGGING</span><span class="chip c-blue">AHEAD</span></div>
+    <div class="mval">57.5M</div>
+    <div class="mname">Disney+ paid subscribers</div>
+    <div class="mt">FY2024 target: <b>60–90M</b> · 96% of low end†</div>
+    <div class="mnote">Includes Disney+ Hotstar from Apr 2020.</div>
+   </div>
+  </div>
+ </div>
+
+ <div class="phase run">
+  <div class="ph-h">
+   <div class="ph-top"><span class="ph-name">RUN · SCALE</span><span class="chip c-amber">IN PROGRESS · AT RISK</span></div>
+   <div class="ph-init">I6 Disney+ Global Expansion · I7 Enterprise DTC Reorganization</div>
+   <div class="ph-status">I6 is under way (Europe, India, Japan). I7 is pending and would resolve M2.</div>
+  </div>
+  <div class="mgrid">
+   <div class="metric">
+    <div class="mh"><span class="mid">M7 · I6 · LEADING</span><span class="chip c-green">ON TRACK</span></div>
+    <div class="mval">9 / 9</div>
+    <div class="mname">Launch waves executed</div>
+    <div class="mt">Team threshold: <b>all planned waves</b>†</div>
+    <div class="mnote">India slipped 5 days and France 14 days (COVID-related).</div>
+   </div>
+   <div class="metric">
+    <div class="mh"><span class="mid">M5 · I5→I6 · LEADING</span><span class="chip c-amber">AT RISK</span></div>
+    <div class="mval">$4.62</div>
+    <div class="mname">Disney+ monthly ARPU</div>
+    <div class="mt">Team threshold: <b>≥ $5.00</b>†</div>
+    <div class="mnote">Diluted by the lower-priced Disney+ Hotstar mix.</div>
+   </div>
+   <div class="metric">
+    <div class="mh"><span class="mid">M8 · I6→I7 · LAGGING</span><span class="chip c-amber">AT RISK</span></div>
+    <div class="mval">$(706)M</div>
+    <div class="mname">DTCI operating income</div>
+    <div class="mt">Target: <b>YoY narrowing by Q4 FY2021</b>†</div>
+    <div class="mnote">Widened $144M vs $(562)M a year earlier.</div>
+   </div>
+  </div>
+ </div>
+</section>
+
+<section class="bottom">
+ <div class="panel">
+  <div class="pt"><b>◆ DECISIONS REQUIRED THIS QUARTER</b><span>From the RACI · due before the Q4 FY2020 QBR</span></div>
+  <div class="dec"><div class="did d6">D6</div>
+   <div class="dq"><b>Streaming Content &amp; Brand Allocation</b>Mulan: hold for theatrical release or release on Disney+? <span>This is the decision M2 says has no single owner.</span></div>
+   <div class="own"><b>A (RACI): Chairman, DMED</b><br>Escalates to the CEO until I7 takes effect</div></div>
+  <div class="dec"><div class="did d1">D1</div>
+   <div class="dq"><b>Transformation Budget Allocation</b>Size the FY2021 shift of content investment toward DTC while COVID closures disrupt Parks and theatrical revenue. <span>Moves M8.</span></div>
+   <div class="own"><b>A: Disney Chief Financial Officer</b></div></div>
+  <div class="dec"><div class="did d7">D7</div>
+   <div class="dq"><b>Global Market Entry &amp; Service Configuration</b>Confirm the Latin America launch configuration (catalog, pricing, local team) and the wave after it. <span>Moves M5 and M7.</span></div>
+   <div class="own"><b>A: Chairman of DTCI</b></div></div>
+ </div>
+
+ <div class="panel">
+  <div class="pt"><b>▥ TRENDS</b><span>Disney-reported</span></div>
+  <div class="charts">
+   <div>
+    <div class="ct">Disney+ paid subscribers</div>
+    <div class="bars">
+     <div class="bw"><div class="bv">26.5M</div><div class="bar" style="height:32px"></div></div>
+     <div class="bw"><div class="bv">57.5M</div><div class="bar" style="height:70px"></div></div>
+     <div class="bw"><div class="bv">73.7M*</div><div class="bar f" style="height:90px"></div></div>
+    </div>
+    <div class="bl"><span>Dec '19</span><span>Jun '20</span><span>Oct '20*</span></div>
+   </div>
+   <div>
+    <div class="ct">DTCI operating income, Q3</div>
+    <div class="bars">
+     <div class="bw"><div class="bv">$(562)M</div><div class="bar r" style="height:72px"></div></div>
+     <div class="bw"><div class="bv">$(706)M</div><div class="bar r" style="height:90px"></div></div>
+    </div>
+    <div class="bl"><span>Q3 FY2019</span><span>Q3 FY2020</span></div>
+   </div>
+  </div>
+  <div class="cnote">Bars are drawn to scale from zero. *Oct 3, 2020 is after this QBR's quarter and is shown hatched as a look-ahead. Disney+ counts include Disney+ Hotstar from Apr 2020; the DTCI segment also includes international linear channels.</div>
+ </div>
+
+ <div class="panel notes">
+  <div class="pt"><b>▤ HOW TO READ</b></div>
+  <div class="legend"><span class="chip c-blue">AHEAD</span><span class="chip c-green">ON TRACK</span><span class="chip c-amber">AT RISK</span><span class="chip c-red">OFF TRACK</span></div>
+  <p><b>Sources.</b> Values are Disney-reported (10-K filings and Q3 FY2020 earnings release). † marks a threshold or calculation set by Team 3.</p>
+  <p><b>Period.</b> Values are Q3 FY2020 unless marked. The &gt;100M paid figure (Aug 4, 2020) is all DTC services combined, not Disney+ alone.</p>
+  <p><b>Interpretation.</b> Crawl/Walk/Run is Team 3's lens; Disney did not publish such a plan.</p>
+ </div>
+</section>
+
+<footer class="foot">
+ <span>Disney DTC Transformation · Week 6 · Team 3 · Dimitrius Pacheco · Keagan Smith · Tiago Farinas · Mahdin Awsaf Chowdhury</span>
+ <button onclick="document.getElementById('about').classList.add('open')">About</button>
+</footer>
+</div>
+
+<div class="modal" id="about" onclick="if(event.target===this)this.classList.remove('open')"><div class="mbox">
+ <button class="x" onclick="document.getElementById('about').classList.remove('open')">×</button>
+ <div class="kicker">ABOUT THIS QBR</div><h2>Designed for a seven-minute executive read</h2>
+ <p style="font-size:12px;line-height:1.55;color:#c6d6ef;margin:0 0 10px">
+  This dashboard is a decision-support synthesis of Team 3’s final transformation roadmap, governance RACI, and evidence-verification logic. The Q3 FY2020 executive snapshot is separated from later roadmap outcomes, and Disney-reported facts are distinguished from Team 3 sequencing, thresholds, calculations, and diagnosis.
+ </p>
+ <p style="font-size:12px;line-height:1.55;color:#c6d6ef;margin:0">
+  <b style="color:#fff">Presentation 3 · Team 3</b><br>
+  Dimitrius Pacheco · Keagan Smith · Tiago Farinas · Mahdin Awsaf Chowdhury
+ </p>
+</div></div>
+</body></html>
